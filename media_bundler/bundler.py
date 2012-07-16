@@ -71,7 +71,7 @@ class Bundle(object):
             cls.check_attr(attrs, "css_file")
             return PngSpriteBundle(attrs["name"], attrs["path"], attrs["url"],
                                    attrs["files"], attrs["type"],
-                                   attrs["css_file"])
+                                   attrs["css_file"], attrs['sprite_path'])
         else:
             raise InvalidBundleType(attrs["type"])
 
@@ -151,12 +151,17 @@ class PngSpriteBundle(Bundle):
     CSS.
     """
 
-    def __init__(self, name, path, url, files, type, css_file):
+    def __init__(self, name, path, url, files, type, css_file, sprite_path):
         super(PngSpriteBundle, self).__init__(name, path, url, files, type)
         self.css_file = css_file
+        self.sprite_path = sprite_path
 
     def get_extension(self):
         return ".png"
+
+    def get_bundle_path(self):
+        filename = self.get_bundle_filename()
+        return os.path.join(self.sprite_path, filename)
 
     def make_bundle(self, versioner):
         import Image  # If this fails, you need the Python Imaging Library.
